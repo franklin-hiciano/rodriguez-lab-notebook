@@ -15,7 +15,7 @@ This repository is automatically updated from Franklin's Lab Notebooks on Google
 ### Installing
 
 ```
-pip install rodriguez-lab-notebook-franklinhiciano`
+pip install rodriguez-lab-notebook-franklinhiciano
 ```
 
 ### Executing program
@@ -26,8 +26,9 @@ import franklinnotebook
 
 ## Help
 
-
+To print documentation for an object, such as a function:
 ```
+
 command to run if program contains helper info
 ```
 
