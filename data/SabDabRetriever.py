@@ -33,16 +33,7 @@ def get_structures(self, destination_dir=f"sabdab_complexes_{datetime.now().strf
     "--output_path", destination_dir
   ]
   try:
-    process = subprocess.Popen(
-      cmd,
-      stdout=subprocess.PIPE,
-      stderr=subprocess.STDOUT,
-      text=True,
-      bufsize=1,
-      env=os.environ.copy()
-    )
-    for line in process.stdout:
-      print(line, end="")
+    subprocess.run(cmd, check=True)
     self.structures_dir = destination_dir
   except Exception as e:
     print(f"Error while downloading structures from SabDab: {e}")
