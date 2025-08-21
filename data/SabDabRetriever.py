@@ -10,6 +10,7 @@ def get_summary_file(self, download_link, destination=f"sabdab_summary_{datetime
   except Exception as e:
     print(e)
     if "404" in str(e): print("Try a new SabDab download link, yours may be expired.")
+    sys.exit(1)
 
 def get_structures(self, destination_dir=f"sabdab_complexes_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}"):
   urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
@@ -34,6 +35,7 @@ def get_structures(self, destination_dir=f"sabdab_complexes_{datetime.now().strf
     self.structures_dir = destination_dir
   except Exception as e:
     print(f"Error while downloading structures from SabDab: {e}")
+    sys.exit(1)
 
 def extract_sequences_from_structures(self, destination=None):
   df_summary = pd.read_csv(self.summary_file_path, sep="\t")
