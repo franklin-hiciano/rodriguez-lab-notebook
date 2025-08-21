@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
       'biopython',
-      'pandas
+      'pandas',
       'receptor-utils',
     ],
     author='Franklin Hiciano',
