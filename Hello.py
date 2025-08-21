@@ -1,7 +1,6 @@
 class Hello:
-    def __init__():
-        """Initialize self.  See help(type(self)) for accurate signature."""
-        pass
+  def __init__():
+    print("Hello, world!")
 
-    def hi():
-        pass
+  def hi():
+    print("hi")
