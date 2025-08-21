@@ -35,7 +35,7 @@ def get_structures(self, destination_dir=f"sabdab_complexes_{datetime.now().strf
   except Exception as e:
     print(f"Error while downloading structures from SabDab: {e}")
 
-def extract_sequences_from_structures(destination=None):
+def extract_sequences_from_structures(self, destination=None):
   df_summary = pd.read_csv(self.summary_file_path, sep="\t")
 
   with contextlib.chdir(self.structures_dir):
