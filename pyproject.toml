@@ -16,4 +16,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["data"]                  # package directory at repo root
+packages = ["franklinlabnb"]                  # package directory at repo root
