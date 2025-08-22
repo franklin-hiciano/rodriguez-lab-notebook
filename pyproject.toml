@@ -1,3 +1,23 @@
 [build-system]
 requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "rodriguez-lab-notebook-franklinhiciano"
+version = "v0.1.0"
+authors = [
+  { name="Franklin Hiciano", email="fhiciano5@gmail.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/franklin-hiciano/rodriguez-lab-notebook"
+Issues = "https://github.com/franklin-hiciano/rodriguez-lab-notebook/issues"
