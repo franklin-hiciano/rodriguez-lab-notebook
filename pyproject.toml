@@ -13,4 +13,8 @@ license = { text = "MIT" }          # or use { file = "LICENSE" }
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools]
-packages = ["FranklinLabNB"]                  # package directory at repo root
+package-dir = { "": "." }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["FranklinLabNB*"]
