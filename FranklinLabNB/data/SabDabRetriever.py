@@ -18,8 +18,9 @@ class SabDabRetriever:
 
 def get_structures(self):
   urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
-  subprocess.run([sys.executable, "sabdab_downloader.py", "--summary_file", self.summary_file, "--chothia_pdb", "--output_path", (dir := f"sabdab_structures_{self.timestamp}")], check=True)
-  return dir
+  os.makedirs((outpath := f"sabdab_structures_{self.timestamp}"))
+  subprocess.run([sys.executable, "sabdab_downloader.py", "--summary_file", self.summary_file, "--chothia_pdb", "--output_path", outpath], check=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+  return outpath
 
 def get_sequences_and_structures(self):
   os.chdir(self.get_structures())
