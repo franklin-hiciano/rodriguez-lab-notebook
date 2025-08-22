@@ -15,6 +15,8 @@ In Jupyter/Colab notebooks it is recommended to use:
 Ex:
 ```python
 >>> from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
+```
+```
 >>> s = SabDabRetriever()
 >>> summary_file = s.get_summary_file()
 Saved SabDab summary file to sabdab_summary_2025-08-22_04-07-36.tsv.
