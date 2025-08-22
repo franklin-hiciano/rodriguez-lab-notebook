@@ -21,8 +21,8 @@ def get_summary_file(self, download_link, destination=None):
     self.summary_file_path = destination
   except Exception as e:
     print(e)
-    if "404" in str(e): print("Try a new SabDab download link, yours may be expired.")
-    sys.exit(1)
+    if "404" in str(e): sys.exit("Try a new SabDab download link, yours may be expired.")
+    else: sys.exit()
 
 def get_structures(self, destination_dir=None):
   destination_dir = destination_dir or f"sabdab_complexes_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}"
