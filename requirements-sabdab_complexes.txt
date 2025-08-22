@@ -2,3 +2,4 @@
 biopython==1.85
 pandas==2.2.2
 receptor-utils)
+receptor-utils==0.0.56
