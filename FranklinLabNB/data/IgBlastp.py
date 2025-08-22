@@ -4,6 +4,7 @@ import subprocess
 import glob
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
+import os
 
 class IgBlastp:
   def __init__(self):
@@ -21,7 +22,6 @@ def istl(self):
         subprocess.run(["download_germline_set", "Homo sapiens", f"IG{chn}", "-f", "MULTI-IGBLAST", "-p", f"human_IG{chn}"], check=True)
         ntides.write(open(f"human_IG{chn}V.fasta").read())
       for rec in SeqIO.parse('nt.fa', 'fasta'):
-        print(rec)
         SeqIO.write(SeqRecord(seq=rec.seq.translate(to_stop=True), id=rec.id), aas, format='fasta')
       subprocess.run([glob.glob("*/**/makeblastdb")[0], "-parse_seqids", "-dbtype", "prot", "-in", "aa.fa", "-out", "human_gl_V"], check=True)
   _dl_db()
