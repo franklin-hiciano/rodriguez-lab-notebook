@@ -4,12 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rodriguez-lab-notebook-franklinhiciano"
-version = "0.0.7" # bump
-description = "Utilities for SAbDab retrieval, GitHub export, etc."
-readme = "README.md"
+version = "0.0.7"               # bump!
 requires-python = ">=3.9"
-authors = [{ name = "Franklin Hiciano" }]
-license = { text = "MIT" }
+dynamic = ["dependencies"]       # ← REQUIRED
 
 [tool.setuptools]
 package-dir = { "" = "." }
@@ -19,4 +16,5 @@ where = ["."]
 include = ["FranklinLabNB*"]
 
 [tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
+# include your sets here; add both if you want
+dependencies = { file = ["requirements.txt", "requirements-sabdab_complexes.txt"] }
