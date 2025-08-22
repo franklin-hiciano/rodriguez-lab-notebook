@@ -7,6 +7,7 @@ To avoid mysterious errors, please use this exact command:
 ```
 !{sys.executable} -m pip install --no-cache-dir --force-reinstall -qU "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
 ```
+Omit the `!` when not in an interactive notebook.
 
 ## Usage
 Ex:
