@@ -1,6 +1,6 @@
 # Rodriguez Lab Notebook
 
-This repository stores the code Franklin Hiciano used to generate data & results in the [Rodriguez Lab](https://oscarlr.github.io/), which aims to understand the IG locus.
+This repository stores the code Franklin Hiciano used to generate data & results in the [Rodriguez Lab](https://oscarlr.github.io/), which aims to understand the IG locus. The code is auto-generated from a Colab notebook using custom scripts.
 
 ## Installation
 ```
