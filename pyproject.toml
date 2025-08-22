@@ -12,9 +12,6 @@ authors = [{ name = "Franklin Hiciano" }]
 license = { text = "MIT" }          # or use { file = "LICENSE" }
 dependencies = { file = ["requirements.txt"] }
 
-[tool.setuptools]
-package-dir = { "": "." }
-
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["FranklinLabNB*"]
