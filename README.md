@@ -2,14 +2,16 @@
 
 This repository stores the code Franklin Hiciano used to generate data & results in the [Rodriguez Lab](https://oscarlr.github.io/).
 
+## Installation
 ```
 pip install rodriguez-lab-notebook-franklinhiciano
 ```
-Usage:
+
+## Usage
 ```python
 from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
 ```
-
+## Authors
 Franklin Hiciano
 [fhiciano5@gmail.com]
 
