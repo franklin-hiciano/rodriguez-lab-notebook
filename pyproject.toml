@@ -1,23 +1,19 @@
 [build-system]
-requires = ["setuptools >= 77.0.3"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rodriguez-lab-notebook-franklinhiciano"
-version = "v0.1.0"
-authors = [
-  { name="Franklin Hiciano", email="fhiciano5@gmail.com" },
-]
-description = "A small example package"
+name = "rodriguez-lab-notebook-franklinhiciano"  # the distribution (pip) name
+version = "0.0.1"
+description = "Utilities for SAbDab retrieval, GitHub export, etc."
 readme = "README.md"
-requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+requires-python = ">=3.9"
+authors = [{ name = "Franklin Hiciano" }]
+license = { text = "MIT" }          # or use { file = "LICENSE" }
+dependencies = [
+  "PyGithub>=2.1",
+  # add only true runtime deps here
 ]
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
 
-[project.urls]
-Homepage = "https://github.com/franklin-hiciano/rodriguez-lab-notebook"
-Issues = "https://github.com/franklin-hiciano/rodriguez-lab-notebook/issues"
+[tool.setuptools]
+packages = ["data"]                  # package directory at repo root
