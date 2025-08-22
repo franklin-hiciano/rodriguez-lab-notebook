@@ -7,13 +7,10 @@ name = "rodriguez-lab-notebook-franklinhiciano"  # the distribution (pip) name
 version = "0.0.1"
 description = "Utilities for SAbDab retrieval, GitHub export, etc."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 authors = [{ name = "Franklin Hiciano" }]
 license = { text = "MIT" }          # or use { file = "LICENSE" }
-dependencies = [
-  "PyGithub>=2.1",
-  # add only true runtime deps here
-]
+dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools]
-packages = ["franklinlabnb"]                  # package directory at repo root
+packages = ["FranklinLabNB"]                  # package directory at repo root
