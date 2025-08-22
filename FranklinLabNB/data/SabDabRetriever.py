@@ -21,7 +21,7 @@ def get_summary_file(self, download_link, destination=None):
     self.summary_file_path = destination
   except Exception as e:
     print(e)
-    if "404" in str(e): sys.exit("Try a new SabDab download link, yours may be expired.")
+    if "404" in str(e): sys.exit("[ERROR] Try a new SabDab download link, yours may be expired.")
     else: sys.exit()
 
 def get_structures(self, destination_dir=None):
@@ -40,7 +40,7 @@ def get_structures(self, destination_dir=None):
     subprocess.run(cmd, env=env, check=True)
     self.structures_dir = destination_dir
   except Exception as e:
-    print(f"Error while downloading structures from SabDab: {e}")
+    print(f"[ERROR] Error while downloading structures from SabDab: {e}")
     sys.exit(1)
 
 def extract_sequences_from_structures(self, destination=None):
