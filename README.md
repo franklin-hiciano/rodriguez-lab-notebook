@@ -16,7 +16,7 @@ Ex:
 ```python
 >>> from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
 ```
-```
+```python
 >>> s = SabDabRetriever()
 >>> summary_file = s.get_summary_file()
 Saved SabDab summary file to sabdab_summary_2025-08-22_04-07-36.tsv.
@@ -24,11 +24,11 @@ Saved SabDab summary file to sabdab_summary_2025-08-22_04-07-36.tsv.
 Saved SabDab structures to sabdab_complexes_2025-08-22_03-53-15
 ```
 If the instance is deleted you can use manual flags, like:
-```
+```python
 structures_dir = s.get_structures(summary_file="sabdab_summary_2025-08-22_04-07-36.tsv")
 ```
 or
-```
+```python
 structures_dir = s.get_structures(summary_file="sabdab_summary_2025-08-22_04-07-36.tsv")
 ```
 
