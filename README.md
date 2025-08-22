@@ -2,49 +2,16 @@
 
 This repository stores the code Franklin Hiciano used to generate data & results in the [Rodriguez Lab](https://oscarlr.github.io/).
 
-## Description
-
-This repository is automatically updated from Franklin's Lab Notebooks on Google Colab.
-
-## Getting Started
-
-### Dependencies
-
-1. `python>=3.8`
-
-### Installing
-
 ```
 pip install rodriguez-lab-notebook-franklinhiciano
 ```
-
-### Executing program
-
+Usage:
+```python
+from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
 ```
-import franklinnotebook
-```
-
-## Help
-
-To print documentation for an object, such as a function:
-```
-
-command to run if program contains helper info
-```
-
-## Authors
 
 Franklin Hiciano
 [fhiciano5@gmail.com]
-
-## Version History
-
-* v0.1.0
-    * Initial Setup
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE.md file for details
 
 ## Acknowledgments
 
