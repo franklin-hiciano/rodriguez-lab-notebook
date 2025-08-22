@@ -18,7 +18,7 @@ def to_fasta(self):
     with open(fasta, 'w') as f:
       for c in chains:
         amino_acids = "".join(str(pp.get_sequence()) for pp in ppb.build_peptides(c))
-        f.write(f""">{pdb.stem}|{c.id}\n{amino_acids}\n""")
+        f.write(f""">{pdb.stem}|{c.id}\n{amino_acids}\n\n""")
     fastas.append(fasta)
   return fastas
 
