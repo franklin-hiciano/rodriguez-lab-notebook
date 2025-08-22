@@ -12,9 +12,24 @@ In Jupyter/Colab notebooks it is recommended to use:
 ```
 
 ## Usage
+Ex:
 ```python
-from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
+>>> from FranklinLabNB.data.SabDabRetriever import SabDabRetriever
+>>> s = SabDabRetriever()
+>>> summary_file = s.get_summary_file()
+Saved SabDab summary file to sabdab_summary_2025-08-22_04-07-36.tsv.
+>>> structures_dir = s.get_structures()
+Saved SabDab structures to sabdab_complexes_2025-08-22_03-53-15
 ```
+If the instance is deleted you can use manual flags, like:
+```
+structures_dir = s.get_structures(summary_file="sabdab_summary_2025-08-22_04-07-36.tsv")
+```
+or
+```
+structures_dir = s.get_structures(summary_file="sabdab_summary_2025-08-22_04-07-36.tsv")
+```
+
 ## Authors
 Franklin Hiciano
 [fhiciano5@gmail.com]
