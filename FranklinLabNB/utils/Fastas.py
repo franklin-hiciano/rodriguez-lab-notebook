@@ -9,12 +9,22 @@ class Fastas:
     self.dir = os.path.dirname(os.path.abspath(self.fastas[0]))
 
 def translate(self):
-  for nt_fa in self.fastas:
+  for i, nt_fa in enumerate(self.fastas):
     try:
-      with open(os.path.join(self.dir, nt_fa.stem+'_aa'+nt_fa.suffix) ,'w+') as aa_fa:
+      aa_fa = os.path.join(self.dir, nt_fa.stem+'_aa'+nt_fa.suffix)
+      with open(aa_fa, 'w+') as f:
         for rec in SeqIO.parse(nt_fa, 'fasta'):
-          SeqIO.write(SeqRecord(seq=rec.seq.translate(to_stop=True), id=rec.id), aa_fa, format='fasta')
+          SeqIO.write(SeqRecord(seq=rec.seq.translate(to_stop=True), id=rec.id), f, format='fasta')
+        self.fastas[i] = aa_fa
     except Exception as e:
       print(f"Could not translate {nt_fa}: {e}")
+  return self
+
+def merge(self, out: os.PathLike):
+  with open(out,'w') as out:
+    for fa in self.fastas:
+      out.write(open(fa).read())
+  return self
 
 Fastas.translate = translate
+Fastas.merge = merge
