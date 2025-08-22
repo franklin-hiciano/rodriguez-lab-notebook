@@ -14,7 +14,7 @@ class SabDabRetriever:
   def __init__(self, summary_file_download_link):
     self.timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     self.summary_file = f"sabdab_summary_{self.timestamp}.tsv"
-    urlretrieve("download_link", self.summary_file)
+    urlretrieve(summary_file_download_link, self.summary_file)
 
 def get_structures(self):
   urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
