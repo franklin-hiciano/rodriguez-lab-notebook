@@ -4,7 +4,11 @@ This repository stores the code Franklin Hiciano used to generate data & results
 
 ## Installation
 ```
-pip install rodriguez-lab-notebook-franklinhiciano
+pip install --no-cache-dir --force-reinstall "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
+```
+In Jupyter/Colab notebooks it is recommended to use:
+```
+!{sys.executable} -m pip install --no-cache-dir --force-reinstall "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
 ```
 
 ## Usage
