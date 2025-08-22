@@ -8,13 +8,13 @@ class PDBs:
     self.pdbs = [Path(f) for f in pdbs]
     self.dir = os.path.dirname(os.path.abspath(self.pdbs[0]))
 
-def to_fasta(self):
+def to_fasta(self, fastas_dir=None):
   pdbprs = PDBParser()
   ppb = PPBuilder()
   fastas = []
   for pdb in self.pdbs:
     chains = pdbprs.get_structure("p", pdb).get_chains()
-    fasta = os.path.join(pdb.parent, pdb.stem+".fasta")
+    fasta = os.path.join((fastas_dir or pdb.parent), pdb.stem+".fasta")
     with open(fasta, 'w') as f:
       for c in chains:
         amino_acids = "".join(str(pp.get_sequence()) for pp in ppb.build_peptides(c))
