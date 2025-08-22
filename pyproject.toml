@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rodriguez-lab-notebook-franklinhiciano"
-version = "0.0.5"                         # bump this
+version = "0.0.6"  # bump
 description = "Utilities for SAbDab retrieval, GitHub export, etc."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,12 +12,11 @@ authors = [{ name = "Franklin Hiciano" }]
 license = { text = "MIT" }
 
 [tool.setuptools]
-package-dir = { "": "." }
+package-dir = { "" = "." }
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["FranklinLabNB*"]
 
-# ⬅️ dynamic deps must be here, not under [project]
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
