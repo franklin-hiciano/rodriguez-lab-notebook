@@ -10,7 +10,7 @@ class IgBlastp:
   def __init__(self):
     pass
 
-def istl(self):
+def install(self):
   def _dl():
     urlretrieve("https://ftp.ncbi.nih.gov/blast/executables/igblast/release/1.22.0/ncbi-igblast-1.22.0-x64-linux.tar.gz", "igblast.tar.gz")
     tarfile.open("igblast.tar.gz", "r:gz").extractall()
