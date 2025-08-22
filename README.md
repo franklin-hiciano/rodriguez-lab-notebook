@@ -3,12 +3,9 @@
 This repository stores the code Franklin Hiciano used to generate data & results in the [Rodriguez Lab](https://oscarlr.github.io/), which aims to understand the IG locus. The code is auto-generated from a Colab notebook using custom scripts.
 
 ## Installation
+To avoid mysterious errors, please use this exact command:
 ```
-pip install --no-cache-dir --force-reinstall "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
-```
-In Jupyter/Colab notebooks it is recommended to use:
-```
-!{sys.executable} -m pip install --no-cache-dir --force-reinstall "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
+!{sys.executable} -m pip install --no-cache-dir --force-reinstall -qU "git+https://github.com/franklin-hiciano/rodriguez-lab-notebook.git@main"
 ```
 
 ## Usage
