@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from Bio.PDB import PDBParser, PPBuilder
 
 class PDBs:
