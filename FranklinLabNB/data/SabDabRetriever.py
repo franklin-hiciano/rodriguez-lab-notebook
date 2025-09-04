@@ -44,15 +44,15 @@ def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_
             return None
 
         for record in SeqIO.parse(fasta_file, "fasta"):
+            print(str(record.seq))
             if record.id == chain_id:
-                return str(record.seq)
+              return str(record.seq)
 
         print(f"Sequence not found for PDB {pdb_id}, chain {chain_id}")
         return None
 
     def insert_antibody_chain_sequence_into_row(row):
         pdb_id = row["pdb"]
-        print(row['Hchain'])
         row["Hchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Hchain"])
         row["Lchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Lchain"])
         row["antigen_chain_seq"] = get_sequence_of_structure_chain(pdb_id, row["antigen_chain"])
