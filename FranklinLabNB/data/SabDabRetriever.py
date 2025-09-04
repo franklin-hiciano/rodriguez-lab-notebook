@@ -52,6 +52,7 @@ def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_
 
     def insert_antibody_chain_sequence_into_row(row):
         pdb_id = row["pdb"]
+        print(row['Hchain'])
         row["Hchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Hchain"])
         row["Lchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Lchain"])
         row["antigen_chain_seq"] = get_sequence_of_structure_chain(pdb_id, row["antigen_chain"])
