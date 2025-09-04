@@ -46,7 +46,7 @@ def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_
         for record in SeqIO.parse(fasta_file, "fasta"):
             print(str(record.seq))
             print(record.id, chain_id)
-            if record.id == chain_id:
+            if str(record.id) == str(chain_id):
               return str(record.seq)
 
         print(f"Sequence not found for PDB {pdb_id}, chain {chain_id}")
