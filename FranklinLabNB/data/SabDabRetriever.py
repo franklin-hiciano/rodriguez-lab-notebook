@@ -38,6 +38,11 @@ def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_
     fastas_with_chain_sequences += glob.glob(os.path.join(fasta_dir, "**/*.fa"), recursive=True)
 
     def get_sequence_of_structure_chain(pdb_id, chain_id):
+        if chain_id:
+          pass
+        else:
+          return None
+
         fasta_file = next((f for f in fastas_with_chain_sequences if Path(f).stem == pdb_id), None)
         if fasta_file is None:
             print(f"No fasta found for {pdb_id}")
