@@ -1,52 +1,65 @@
-import os
-import sys
-from datetime import datetime
-import contextlib
-import subprocess
-from urllib.request import urlretrieve
-from urllib.request import HTTPError
 from pathlib import Path
+import subprocess
 import glob
 import pandas as pd
-from Bio.PDB import PDBParser, PPBuilder
+import shutil
+from urllib.request import urlretrieve
+from FranklinLabNB.utils.PDBs import PDBs
+from Bio import SeqIO
 
 class SabDabRetriever:
-  def __init__(self, summary_file_download_link):
-    self.timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    self.summary_file = f"sabdab_summary_{self.timestamp}.tsv"
-    urlretrieve(summary_file_download_link, self.summary_file)
+  def __init__(self, summary_file_download_link, summary_table_outpath="sabdab_summary.tsv"):
+    urlretrieve(summary_file_download_link, summary_table_outpath)
+    self.summary_table = summary_table_outpath
 
-def get_structures(self):
+def get_structures(self, outdir="sabdab_structures"):
+  shutil.rmtree(outdir)
+  os.makedirs(outdir, exist_ok=True)
   urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
-  os.makedirs((outpath := f"sabdab_structures_{self.timestamp}"))
-  subprocess.run([sys.executable, "sabdab_downloader.py", "--summary_file", self.summary_file, "--chothia_pdb", "--output_path", outpath], check=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-  return outpath
+  subprocess.run([
+      sys.executable,
+      "sabdab_downloader.py",
+      '--summary_file', self.summary_table,
+      '--output_path', outdir,
+      '--chothia_pdb'
+  ], check=True)
 
-def get_sequences_and_structures(self, structures_dir=None):
-  df = pd.read_csv(self.summary_file, sep="\t")
-  with contextlib.chdir(structures_dir or self.get_structures()):
-    print(os.getcwd())
-    pdbprs = PDBParser()
-    ppb = PPBuilder()
-    def pdbs():
-      pdb_id = lambda pdb_file: Path(pdb_file).stem
-      chains = lambda pdb_file: pdbprs.get_structure("ab-ag_complex", pdb_file).get_chains()
-      amino_acids = lambda chn: ("".join(str(pp.get_sequence()) for pp in ppb.build_peptides(chn)), print(chn.id))[0]
+def convert_antibody_structures_to_fastas(self, structures_dir, outdir):
+  antibody_structures = glob.glob(os.path.join(structures_dir, "**/*.pdb"), recursive=True)
+  print(antibody_structures)
+  PDBs(antibody_structures).to_fasta(fastas_dir=outdir)
 
-      return {pdb_id(f): {chn.id: amino_acids(chn) for chn in chains(f)} for f in glob.glob("*/**/*.pdb", recursive=True)}
+def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_summary_table_outpath):
+    summary_table = pd.read_csv(self.summary_table, sep="\t")
+    print("Columns:", summary_table.columns.tolist())
 
-    def insert_seqs_into_table():
-      for pdb_id, chns in pdbs().items():
-        for chn_id, chn_seq in chns.items():
-          pdb_rows = df[df['pdb']==pdb_id]
-          chn_row = pdb_rows[(pdb_rows==chn_id[0]).any(axis=1)]
-          if chn_row.empty: continue
-          chn_col_name = pdb_rows.columns[(pdb_rows==chn_id).any(axis=0)][0]+'_seq'
-          df.loc[chn_row.index[0], chn_col_name] = chn_seq
-    insert_seqs_into_table()
+    # collect all FASTA files
+    fastas_with_chain_sequences = glob.glob(os.path.join(fasta_dir, "**/*.fasta"), recursive=True)
+    fastas_with_chain_sequences += glob.glob(os.path.join(fasta_dir, "**/*.fa"), recursive=True)
 
-  df.to_csv((out := Path(self.summary_file).stem+'_with_seqs.tsv'), sep='\t', index=False)
-  return out
+    def get_sequence_of_structure_chain(pdb_id, chain_id):
+        fasta_file = next((f for f in fastas_with_chain_sequences if Path(f).stem == pdb_id), None)
+        if fasta_file is None:
+            print(f"No fasta found for {pdb_id}")
+            return None
+
+        for record in SeqIO.parse(fasta_file, "fasta"):
+            if record.id == chain_id:
+                return str(record.seq)
+
+        print(f"Sequence not found for PDB {pdb_id}, chain {chain_id}")
+        return None
+
+    def insert_antibody_chain_sequence_into_row(row):
+        pdb_id = row["pdb"]
+        row["Hchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Hchain"])
+        row["Lchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Lchain"])
+        row["antigen_chain_seq"] = get_sequence_of_structure_chain(pdb_id, row["antigen_chain"])
+        return row
+
+    summary_table = summary_table.apply(insert_antibody_chain_sequence_into_row, axis=1)
+    summary_table.to_csv(filled_summary_table_outpath, sep="\t", index=False)
 
 SabDabRetriever.get_structures = get_structures
-SabDabRetriever.get_sequences_and_structures = get_sequences_and_structures
+SabDabRetriever.convert_antibody_structures_to_fastas = convert_antibody_structures_to_fastas
+SabDabRetriever.insert_antibody_sequences_into_sabdab_summary_table = insert_antibody_sequences_into_sabdab_summary_table
