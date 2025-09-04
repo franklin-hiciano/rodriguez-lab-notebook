@@ -1,3 +1,5 @@
+import sys
+import os
 from pathlib import Path
 import subprocess
 import glob
@@ -13,7 +15,8 @@ class SabDabRetriever:
     self.summary_table = summary_table_outpath
 
 def get_structures(self, outdir="sabdab_structures"):
-  shutil.rmtree(outdir)
+  if os.path.isdir(outdir):
+    shutil.rmtree(outdir)
   os.makedirs(outdir, exist_ok=True)
   urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
   subprocess.run([
