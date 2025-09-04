@@ -1,25 +1,50 @@
 import os
 from pathlib import Path
+from Bio.Seq import Seq
 from Bio.PDB import PDBParser, PPBuilder
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
 
 class PDBs:
-  def __init__(self, pdbs):
-    if not isinstance(pdbs, list): pdbs = [pdbs]
-    self.pdbs = [Path(f) for f in pdbs]
-    self.dir = os.path.dirname(os.path.abspath(self.pdbs[0]))
+  def __init__(self, pdbs: list[str]):
 
-def to_fasta(self, fastas_dir=None):
-  pdbprs = PDBParser()
-  ppb = PPBuilder()
+    if isinstance(pdbs, list):
+      try:
+        self.pdbs = [Path(pdb) for pdb in pdbs]
+      except TypeError as e:
+        raise TypeError("The input must be a list of paths.")
+    else:
+      raise TypeError("The input must be a list of paths.")
+
+def to_fasta(self, fastas_dir="fastas"):
+  os.makedirs(fastas_dir, exist_ok=True)
+
+  pdbParser = PDBParser()
+  ppBuilder = PPBuilder()
+
   fastas = []
+
   for pdb in self.pdbs:
-    chains = pdbprs.get_structure("p", pdb).get_chains()
-    fasta = os.path.join((fastas_dir or pdb.parent), pdb.stem+".fasta")
-    with open(fasta, 'w') as f:
-      for c in chains:
-        amino_acids = "".join(str(pp.get_sequence()) for pp in ppb.build_peptides(c))
-        f.write(f""">{pdb.stem}|{c.id}\n{amino_acids}\n\n""")
-    fastas.append(fasta)
+    structure_chains = pdbParser.get_structure("struc", pdb).get_chains()
+    records_of_chains_in_pdb = []
+
+    for chain in structure_chains:
+      polypeptides = ppBuilder.build_peptides(chain)
+      polypeptide_sequences = [str(polypeptide.get_sequence()) for polypeptide in polypeptides]
+      chain_sequence = "".join(polypeptide_sequences)
+
+      chain_record = SeqRecord(
+          Seq(chain_sequence),
+          id=chain.id
+      )
+
+      records_of_chains_in_pdb.append(chain_record)
+
+    fasta_outfile = os.path.join(fastas_dir, f"{Path(pdb).stem}.fasta")
+
+    SeqIO.write(records_of_chains_in_pdb, fasta_outfile, 'fasta')
+    fastas.append(fasta_outfile)
+
   return fastas
 
 PDBs.to_fasta = to_fasta
