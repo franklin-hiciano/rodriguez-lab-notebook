@@ -45,6 +45,7 @@ def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_
 
         for record in SeqIO.parse(fasta_file, "fasta"):
             print(str(record.seq))
+            print(record.id, chain_id)
             if record.id == chain_id:
               return str(record.seq)
 
