@@ -99,13 +99,13 @@ def run(self, fastas: list[os.PathLike], outfile, outfmt=None):
           '-organism', 'human']
         if outfmt is not None:
           args += ['-outfmt', str(outfmt)]
-          process = subprocess.run(args,
-                                   check=True,
-                                    text=True,
-                                    stderr=subprocess.STDOUT,
-                                    stdout=subprocess.PIPE,
-                                    bufsize=1,
-                                    env=os.environ.copy())
+        process = subprocess.run(args,
+                                  check=True,
+                                  text=True,
+                                  stderr=subprocess.STDOUT,
+                                  stdout=subprocess.PIPE,
+                                  bufsize=1,
+                                  env=os.environ.copy())
 
 
         with open(outfile, 'w') as f:
