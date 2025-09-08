@@ -7,9 +7,10 @@ import pandas as pd
 import shutil
 import requests
 import errno
-from urllib.request import urlretrieve
-from FranklinLabNB.utils.PDBs import PDBs
 from Bio import SeqIO
+from urllib.request import urlretrieve
+from urllib.error import HTTPError, URLError
+from FranklinLabNB.utils.PDBs import PDBs
 
 class SabDabRetriever:
   def __init__(self, sabdab_summary_file_download_link, sabdab_summary_file_path):
@@ -65,20 +66,21 @@ def _get_sabdab_downloader_python_script(self, outpath: str=None):
   return outpath
 
 def _download_sabdab_summary_file(self, link: str, outpath: str):
-  outpath = self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
-  outpath = self._ensure_path_ends_with(outpath, '.tsv')
-  try:
-    print("Downloading SabDab summary file...")
+    outpath = self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
+    outpath = self._ensure_path_ends_with(outpath, '.tsv')
+    try:
+        print("Downloading SabDab summary file...")
+        urlretrieve(link, outpath)
+        print(f"Successfully downloaded SabDab summary file to {outpath}.")
+    except HTTPError as err:
+        if err.code == 404:
+            print(f"Your SabDab download link is invalid or expired. Error: {err}")
+        else:
+            print(f"HTTP error while downloading SabDab summary file: {err}")
+    except URLError as err:
+        print(f"Network error while downloading SabDab summary file: {err}")
 
-    urlretrieve(link, outpath)
-    print(f"Successfully downloaded SabDab summary file to {outpath}.")
-  except requests.exceptions.HTTPError as err:
-    if err.response.status_code == 404:
-      print(f"Your SabDab download link is or invalid or expired. Error: {err}")
-    else:
-      print(f"Error while downloading SabDab summary file: {err}")
-
-  return outpath
+    return outpath
 
 def get_structures(self, outpath: str):
   outpath = self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
