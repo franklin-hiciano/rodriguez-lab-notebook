@@ -5,71 +5,143 @@ import subprocess
 import glob
 import pandas as pd
 import shutil
+import requests
+import errno
 from urllib.request import urlretrieve
 from FranklinLabNB.utils.PDBs import PDBs
 from Bio import SeqIO
 
 class SabDabRetriever:
-  def __init__(self, summary_file_download_link, summary_table_outpath="sabdab_summary.tsv"):
-    urlretrieve(summary_file_download_link, summary_table_outpath)
-    self.summary_table = summary_table_outpath
+  def __init__(self, sabdab_summary_file_download_link, sabdab_summary_file_path):
+    self.sabdab_downloader_python_script = self._get_sabdab_downloader_python_script()
+    self.sabdab_summary_file = self._download_sabdab_summary_file(link=sabdab_summary_file_download_link, outpath=sabdab_summary_file_path)
 
-def get_structures(self, outdir="sabdab_structures"):
-  if os.path.isdir(outdir):
-    shutil.rmtree(outdir)
-  os.makedirs(outdir, exist_ok=True)
-  urlretrieve("https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/", "sabdab_downloader.py")
-  subprocess.run([
-      sys.executable,
-      "sabdab_downloader.py",
-      '--summary_file', self.summary_table,
-      '--output_path', outdir,
-      '--chothia_pdb'
-  ], check=True)
+def _ensure_path_ends_with(self, path: str, end: str):
+  if path.endswith(end):
+    pass
+  else:
+    path += end
 
-def convert_antibody_structures_to_fastas(self, structures_dir, outdir):
-  antibody_structures = glob.glob(os.path.join(structures_dir, "**/*.pdb"), recursive=True)
-  print(antibody_structures)
-  PDBs(antibody_structures).to_fasta(fastas_dir=outdir)
+  return path
 
-def insert_antibody_sequences_into_sabdab_summary_table(self, fasta_dir, filled_summary_table_outpath):
-    summary_table = pd.read_csv(self.summary_table, sep="\t")
-    print("Columns:", summary_table.columns.tolist())
+def _ensure_path_exists(self, path: str):
+  if os.path.exists(path):
+    pass
+  else:
+    raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
 
-    # collect all FASTA files
-    fastas_with_chain_sequences = glob.glob(os.path.join(fasta_dir, "**/*.fasta"), recursive=True)
-    fastas_with_chain_sequences += glob.glob(os.path.join(fasta_dir, "**/*.fa"), recursive=True)
+  return path
 
-    def get_sequence_of_structure_chain(pdb_id, chain_id):
-        if chain_id:
-          pass
-        else:
-          return None
+def _protect_path_from_being_overwritten_if_exists_already(self, path: str, overwrite_anyway=False):
+  if os.path.exists(path):
+    if overwrite_anyway:
+      if os.path.isdir(path):
+        shutil.rmtree(path)
+        os.makedirs(path)
+      else:
+        os.remove(path)
+    else:
+      raise FileExistsError(f"{path} already exists. Please delete or enable overwrite_anyway.")
+  else:
+    if len(path.split(Path(path).stem)[-1]) < 2:
+      os.makedirs(path)
+    else:
+      pass
 
-        fasta_file = next((f for f in fastas_with_chain_sequences if Path(f).stem == pdb_id), None)
-        if fasta_file is None:
-            print(f"No fasta found for {pdb_id}")
-            return None
+  return path
 
-        for record in SeqIO.parse(fasta_file, "fasta"):
-            print(str(record.seq))
-            print(record.id, chain_id)
-            if str(record.id) == str(chain_id):
-              return str(record.seq)
+def _get_sabdab_downloader_python_script(self, outpath: str=None):
+  DOWNLOAD_LINK_FOR_SABDAB_DOWNLOADER_PYTHON_SCRIPT = "https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/downloads/sabdab_downloader.py/"
 
-        print(f"Sequence not found for PDB {pdb_id}, chain {chain_id}")
-        return None
+  if outpath is not None:
+    outpath = self._ensure_path_ends_with(outpath, '.py')
+  else: 
+    outpath ='sabdab_downloader.py'
 
-    def insert_antibody_chain_sequence_into_row(row):
-        pdb_id = row["pdb"]
-        row["Hchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Hchain"])
-        row["Lchain_seq"] = get_sequence_of_structure_chain(pdb_id, row["Lchain"])
-        row["antigen_chain_seq"] = get_sequence_of_structure_chain(pdb_id, row["antigen_chain"])
-        return row
+  print("Getting SabDab downloader python script...")
+  urlretrieve(DOWNLOAD_LINK_FOR_SABDAB_DOWNLOADER_PYTHON_SCRIPT, outpath)
+  print(f"Successfully downloaded SabDab downloader python script to {outpath}.")
 
-    summary_table = summary_table.apply(insert_antibody_chain_sequence_into_row, axis=1)
-    summary_table.to_csv(filled_summary_table_outpath, sep="\t", index=False)
+  return outpath
 
+def _download_sabdab_summary_file(self, link: str, outpath: str):
+  outpath = self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
+  outpath = self._ensure_path_ends_with(outpath, '.tsv')
+  try:
+    print("Downloading SabDab summary file...")
+
+    urlretrieve(link, outpath)
+    print(f"Successfully downloaded SabDab summary file to {outpath}.")
+  except requests.exceptions.HTTPError as err:
+    if err.response.status_code == 404:
+      print(f"Your SabDab download link is or invalid or expired. Error: {err}")
+    else:
+      print(f"Error while downloading SabDab summary file: {err}")
+
+  return outpath
+
+def get_structures(self, outpath: str):
+  outpath = self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
+  print(f"Downloadiing SabDab structures to {outpath}...")
+  command = [
+    sys.executable,
+    self.sabdab_downloader_python_script,
+    '--summary_file', self.sabdab_summary_file,
+    '--output_path', outpath,
+    '--chothia_pdb'
+  ]
+  subprocess.run(command, check=True)
+  print(f"Successfully downloaded SabDab structures to {outpath}.")
+
+def structures_to_sequences(self, structures_dir: str, outpath: str):
+    import os, glob, re
+    from pathlib import Path
+    import pandas as pd
+    from Bio import SeqIO
+
+    self._ensure_path_ends_with(outpath, ".tsv")
+    self._protect_path_from_being_overwritten_if_exists_already(outpath, overwrite_anyway=True)
+
+    # emit FASTAs
+    fasta_dir = "fastas"
+    pdbs = glob.glob(os.path.join(structures_dir, "**", "*.pdb"), recursive=True)
+    PDBs(pdbs).to_fasta(fasta_dir)
+
+    # (pdb, chain) -> sequence
+    seq_map = {}
+    for fa in glob.glob(os.path.join(fasta_dir, "**", "*.fasta"), recursive=True):
+        pdb = Path(fa).stem[:4].lower()
+        for rec in SeqIO.parse(fa, "fasta"):
+            m = re.search(r"([A-Za-z0-9])$", rec.id)
+            if m:
+                seq_map[(pdb, m.group(1).upper())] = str(rec.seq)
+
+    # load and replace
+    df = pd.read_csv(self.sabdab_summary_file, sep="\t")
+    if "pdb" not in df.columns:
+        raise KeyError("Table needs a 'pdb' column.")
+    pdb_col = df["pdb"].astype(str).str.lower()
+
+    targets = [c for c in ("Hchain", "Lchain", "antigen_chain") if c in df.columns]
+    for c in targets:
+        df[c + "_id"] = df[c].astype(str)
+
+    def replace_cell(pdb, cell):
+        if pd.isna(cell): return cell
+        toks = re.split(r"[,\s]+", str(cell).strip())
+        toks = [t for t in toks if t]
+        return ",".join([seq_map.get((pdb, t.upper()), t) for t in toks]) if toks else ""
+
+    for c in targets:
+        df[c] = [replace_cell(p, v) for p, v in zip(pdb_col, df[c])]
+
+    df.to_csv(outpath, sep="\t", index=False)
+    print(f"Wrote {outpath}")
+
+SabDabRetriever._ensure_path_ends_with = _ensure_path_ends_with
+SabDabRetriever._ensure_path_exists = _ensure_path_exists
+SabDabRetriever._protect_path_from_being_overwritten_if_exists_already = _protect_path_from_being_overwritten_if_exists_already
+SabDabRetriever._get_sabdab_downloader_python_script = _get_sabdab_downloader_python_script
+SabDabRetriever._download_sabdab_summary_file = _download_sabdab_summary_file
 SabDabRetriever.get_structures = get_structures
-SabDabRetriever.convert_antibody_structures_to_fastas = convert_antibody_structures_to_fastas
-SabDabRetriever.insert_antibody_sequences_into_sabdab_summary_table = insert_antibody_sequences_into_sabdab_summary_table
+SabDabRetriever.structures_to_sequences = structures_to_sequences
