@@ -56,7 +56,7 @@ def _get_sabdab_downloader_python_script(self, outpath: str=None):
 
   if outpath is not None:
     outpath = self._ensure_path_ends_with(outpath, '.py')
-  else: 
+  else:
     outpath ='sabdab_downloader.py'
 
   print("Getting SabDab downloader python script...")
