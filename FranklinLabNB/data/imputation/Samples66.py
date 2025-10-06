@@ -24,8 +24,8 @@ def download(self):
     """
     This function downloads the 66 samples that Nefte found matched between short-read and long-read data.
     """
-    print("Downloading 66 sample names...")
+    print(f"Downloading 66 sample names. Destination: {self.output_file}. Source: {self.google_drive_file_url}.")
     gdown.download(self.google_drive_file_url, output=self.output_file, quiet=False)
-    print("66 sample names successfully downloaded...")
+    print(f"66 sample names successfully downloaded. Destination: {self.output_file}. Source: {self.google_drive_file_url}.")
 
 Samples66.download = download
